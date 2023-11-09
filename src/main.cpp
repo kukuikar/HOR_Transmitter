@@ -3,9 +3,16 @@
 #include <EncButton.h>
 #include <GyverOLED.h>
 
+//////////////////////////////////////////////////
+///////////  HC-12 transmitter pins  /////////////
+//////////////////////////////////////////////////
 #define TRANS_Rx_PIN 2
 #define TRANS_Tx_PIN 3
+SoftwareSerial Trans(TRANS_Rx_PIN,TRANS_Tx_PIN);
 
+//////////////////////////////////////////////////
+///////////  Switches pins           /////////////
+//////////////////////////////////////////////////
 #define PIN_BRIDGE_ENABLED 4 //enable bridge control
 #define PIN_SPREADER_ENABLED 5 //enable spreader control
 #define PIN_MINICRANES_ENABLED 6 //eneble minicranes control
@@ -14,23 +21,42 @@
 #define PIN_LIFTING_MECH_ENABLED 9 //minicrane twin mode
 #define PIN_TWISTLOCK_STATE 10 //lock unlock twistlocks
 
-#define GIMBAL_R_X_AXIS_PIN 20 //A6
-#define GIMBAL_R_Y_AXIS_PIN 21 //A7
-//#define GIMBAL1_BTN 12
 
-#define GIMBAL_L_X_AXIS_PIN 18 //A4
-#define GIMBAL_L_Y_AXIS_PIN 19 //A5
-//#define GIMBAL2_BTN 13
+//////////////////////////////////////////////////
+///////////  Gimbal pins             /////////////
+//////////////////////////////////////////////////
+#define GIMBAL_R_X_AXIS_PIN A2 //A2
+#define GIMBAL_R_Y_AXIS_PIN A3 //A3
 
+#define GIMBAL_L_X_AXIS_PIN A6 //A6
+#define GIMBAL_L_Y_AXIS_PIN A7 //A7
 
+//////////////////////////////////////////////////
+///////////  Encoder pins            /////////////
+//////////////////////////////////////////////////
+#define ENCODER_DIR1_PIN 11
+#define ENCODER_DIR1_PIN 12
+#define ENCODER_KEY_PIN 13
+EncButton encoderButton(ENCODER_DIR1_PIN, ENCODER_DIR1_PIN, ENCODER_KEY_PIN);
+
+//////////////////////////////////////////////////
+///////////  Timers                  /////////////
+//////////////////////////////////////////////////
+uint32_t tmr = millis();
+
+//////////////////////////////////////////////////
+///////////  Terminator              /////////////
+//////////////////////////////////////////////////
 #define TERMINATOR ';'
 
-EncButton encoderServo(11, 12, 10);
-
-SoftwareSerial Trans(TRANS_Rx_PIN,TRANS_Tx_PIN);
-
+//////////////////////////////////////////////////
+///////////  IIC OLED                /////////////
+//////////////////////////////////////////////////
 GyverOLED<SSD1306_128x64> oled;
 
+//////////////////////////////////////////////////
+/////////// Variables                /////////////
+//////////////////////////////////////////////////
 int servoNumManual = 6;
 byte prevPointer = 0;
 byte pointer = 0;
@@ -44,13 +70,12 @@ void setup()
 {
   Trans.begin(115200);
   Serial.begin(115200);
+
   pinMode(GIMBAL_R_X_AXIS_PIN, INPUT);//hor1
   pinMode(GIMBAL_R_Y_AXIS_PIN, INPUT);//ver1  
-  //pinMode(GIMBAL1_BTN, INPUT);   //but1
 
   pinMode(GIMBAL_L_X_AXIS_PIN, INPUT);//hor2
   pinMode(GIMBAL_L_Y_AXIS_PIN, INPUT);//ver2 
-  //pinMode(GIMBAL2_BTN, INPUT);   //but2
 
   pinMode(PIN_BRIDGE_ENABLED, INPUT_PULLUP);
 
@@ -60,146 +85,54 @@ void setup()
   pinMode(PIN_MINICRANES_ENABLED, INPUT_PULLUP);
   pinMode(PIN_MINICRANES_SYNCMODE, INPUT_PULLUP);
 
+  pinMode(PIN_LIFTING_MECH_ENABLED, INPUT_PULLUP);
+
   oled.init();
   oled.clear();
 
-  oled.print                        // Вывод всех пунктов
-  (F(
-     " Servo 1  0  180\r\n"   // Не забываем про '\r\n' - символ переноса строки
-     " Servo 2  0  180\r\n"
-     " Servo 3  0  180\r\n"
-     " Servo 4  0  180\r\n"
-     " Servo 5  0  180\r\n"
-     " Servo 6  0  180\r\n"
-     " Srv 1-6  0  180\r\n"
-     " Remote\r\n"
-   ));
+  oled.print(F("cookies"));
 
   oled.setCursor(0, pointer);
   oled.print('>');
 
-  oled.update();  
+  oled.update();
+  oled.setPower(OLED_DISPLAY_OFF);
 }
 
-uint32_t tmr = millis();
+
 
 void loop()
 {
-  encoderServo.tick();
-  if (encoderServo.turn())
-  {
-    switch (flag)
-      {
-        case 1:
-          if(encoderServo.right()) { data_bot[pointer]++; data_bot[pointer] = constrain(data_bot[pointer], 0, 90);}
-          if(encoderServo.left()) { data_bot[pointer]--; data_bot[pointer] = constrain(data_bot[pointer], 0, 90);}
-        break;
-        case 2:
-          if(encoderServo.right()) { data_top[pointer]++; data_top[pointer] = constrain(data_top[pointer], 90, 180);}
-          if(encoderServo.left()) { data_top[pointer]--; data_top[pointer] = constrain(data_top[pointer], 90, 180);}
-        break;
-        default:
-        
-          if(encoderServo.right()) pointer++;
-          if(encoderServo.left()) pointer--;
-          
-          if(pointer > 7) pointer = 0;
-          if(pointer == 255) pointer = 7;
-          Serial.println(pointer);
-        break;
-      }
-
-    pointer = constrain(pointer, 0, 7);
-         
-    for (int i = 0; i < 8; i++)
-    {
-      oled.setCursor(param_pos[0]*6, i);
-      oled.print(' ');
-
-      oled.setCursor(param_pos[1]*6, i);
-      oled.print(' ');
-      
-      oled.setCursor(param_pos[2]*6, i);
-      oled.print(' ');
-    }
-    if(pointer < 7)
-    {
-    oled.setCursor((param_pos[1] + 1)*6, pointer);
-    oled.print(data_bot[pointer]);
-    if(data_bot[pointer] < 10)
-    {
-      oled.setCursor((param_pos[1] + 2)*6, pointer);
-      oled.print(' ');
-    }
-    
-
-    oled.setCursor((param_pos[2] + 1)*6, pointer);
-    oled.print(data_top[pointer]);
-    }
-
+  encoderButton.tick();
+  if (encoderButton.turn())
+  {    
     oled.setCursor(param_pos[flag]*6, pointer);
     oled.print('>');
     oled.update();
-    //Serial.println(pointer);
   }
   
-  if (encoderServo.click())
+  if (encoderButton.click())
   {    
     if(pointer == 7)
     {
-      remote = !remote;
-      oled.setCursor(6*2, 7);
-      oled.print(remote ? "Remote" : "Manual");
-      oled.update();
-      //Serial.println(remote ? "Remote" : "Manual");
+
     }
     else// if(pointer > 0)
     {
-      if(flag == 2)
-        flag = 0;
-      else
-        flag++;
       
-      //flag = constrain(flag, 0, 2);
-      /*
-      for (int i = 1; i < 8; i++)
-      {
-        if(i != pointer)
-        {
-          oled.setCursor(param_pos[flag], i);
-          oled.print(' ');
-        }
-      }
-      */
-      oled.setCursor(param_pos[flag == 0 ? 2 : flag - 1]*6, pointer);
-      oled.print(' ');
-      oled.setCursor(param_pos[flag]*6, pointer);
-      oled.print('>');
-      oled.update();
     }
   }
-/*
-  Servo 1     0    180
-> Servo 2   > 0  > 180
-  Servo 3     0    180
-  Servo 4     0    180
-  Servo 5     0    180
-  Servo 6     0    180
-  Srv 1-6     0    180
-  Remote
-*/
-  if (encoderServo.hold())
+
+  if (encoderButton.hold())
   {
-    oled.setCursor(75, pointer);
-    oled.print(' ');
-    oled.update();
+
   }
 
-if(millis() - tmr > 50)
-{
-  tmr = millis();
+//if(millis() - tmr > 50)
+//{
+  //tmr = millis();
   //Serial.println(roundf(map(analogRead(A0), 75, 592, 0, 180)/5)*5);
-}
+//}
 
   int GIMBAL_R_X = analogRead(GIMBAL_R_X_AXIS_PIN);
   int GIMBAL_R_Y = analogRead(GIMBAL_R_Y_AXIS_PIN);
