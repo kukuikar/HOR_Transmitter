@@ -69,7 +69,7 @@ int param_pos[3] = {0, 9, 12};
 void setup()
 {
   Trans.begin(115200);
-  Serial.begin(115200);
+  //Serial.begin(115200);
 
   pinMode(GIMBAL_R_X_AXIS_PIN, INPUT);//hor1
   pinMode(GIMBAL_R_Y_AXIS_PIN, INPUT);//ver1  
