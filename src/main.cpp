@@ -17,4 +17,5 @@ int myFunction(int x, int y) {
   return x + y;
 
   String trans = "trans1";
+  String trans2 = "trans2";
 }
