@@ -34,10 +34,10 @@ SoftwareSerial Trans(TRANS_Rx_PIN,TRANS_Tx_PIN);
 //////////////////////////////////////////////////
 ///////////  Encoder pins            /////////////
 //////////////////////////////////////////////////
-//#define ENCODER_DIR1_PIN 11
-//#define ENCODER_DIR1_PIN 12
-//#define ENCODER_KEY_PIN 13
-EncButton encoderButton(11, 12, 13);
+#define ENCODER_DIR1_PIN 11
+#define ENCODER_DIR1_PIN 12
+#define ENCODER_KEY_PIN 13
+EncButton encoderButton(ENCODER_DIR1_PIN, ENCODER_DIR1_PIN, ENCODER_KEY_PIN);
 
 //////////////////////////////////////////////////
 ///////////  Timers                  /////////////
@@ -103,6 +103,12 @@ void setup()
 
 void loop()
 {
+  if(millis() - tmr > 200)
+  {
+    tmr = millis();
+
+    //Serial.println();
+  }
   encoderButton.tick();
   if (encoderButton.turn())
   {    
@@ -153,7 +159,7 @@ if(millis() - tmr > 200)
   int TWISTLOCKS_STATE = digitalRead(PIN_MINICRANES_ENABLED) * 180;
   int MINICRANE_SYNC_STATE = digitalRead(PIN_MINICRANES_SYNCMODE);
   int MINICRANE_ACTIVE_CRANE = digitalRead(PIN_MINICRANES_ACTIVECRANENUM);
-  int LIFT_UP_DOWN_VAL = map(GIMBAL_R_Y, 100, 808, 0, 180);
+  int LIFT_UP_DOWN_VAL = map(GIMBAL_R_Y, 0, 1023, 0, 180);
 
 
   //мост включен
