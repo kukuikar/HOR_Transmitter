@@ -69,7 +69,7 @@ int param_pos[3] = {0, 9, 12};
 void setup()
 {
   Trans.begin(115200);
-  //Serial.begin(115200);
+  Serial.begin(115200);
 
   pinMode(GIMBAL_R_X_AXIS_PIN, INPUT);//hor1
   pinMode(GIMBAL_R_Y_AXIS_PIN, INPUT);//ver1  
@@ -103,6 +103,12 @@ void setup()
 
 void loop()
 {
+  if(millis() - tmr > 200)
+  {
+    tmr = millis();
+
+    //Serial.println();
+  }
   encoderButton.tick();
   if (encoderButton.turn())
   {    
@@ -141,7 +147,7 @@ void loop()
   int TWISTLOCKS_STATE = digitalRead(PIN_MINICRANES_ENABLED) * 180;
   int MINICRANE_SYNC_STATE = digitalRead(PIN_MINICRANES_SYNCMODE);
   int MINICRANE_ACTIVE_CRANE = digitalRead(PIN_MINICRANES_ACTIVECRANENUM);
-  int LIFT_UP_DOWN_VAL = map(GIMBAL_R_Y, 0, 1023, 0, 180);
+  int LIFT_UP_DOWN_VAL = round(map(GIMBAL_R_Y, 100, 808, 0, 180)/5)*5;
 
 
   //мост включен
@@ -192,5 +198,11 @@ void loop()
     Trans.write(',');
     Trans.write(pointer);
     Trans.write(TERMINATOR);
+
+    Serial.print("3,");
+    Serial.print(LIFT_UP_DOWN_VAL);
+    Serial.print(',');
+    Serial.print(pointer);
+    Serial.println(TERMINATOR);
   }
 }
