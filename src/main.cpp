@@ -34,10 +34,10 @@ SoftwareSerial Trans(TRANS_Rx_PIN,TRANS_Tx_PIN);
 //////////////////////////////////////////////////
 ///////////  Encoder pins            /////////////
 //////////////////////////////////////////////////
-#define ENCODER_DIR1_PIN 11
-#define ENCODER_DIR1_PIN 12
-#define ENCODER_KEY_PIN 13
-EncButton encoderButton(ENCODER_DIR1_PIN, ENCODER_DIR1_PIN, ENCODER_KEY_PIN);
+//#define ENCODER_DIR1_PIN 11
+//#define ENCODER_DIR1_PIN 12
+//#define ENCODER_KEY_PIN 13
+EncButton encoderButton(11, 12, 13);
 
 //////////////////////////////////////////////////
 ///////////  Timers                  /////////////
@@ -59,7 +59,7 @@ GyverOLED<SSD1306_128x64> oled;
 //////////////////////////////////////////////////
 int servoNumManual = 6;
 byte prevPointer = 0;
-byte pointer = 0;
+byte pointer = 6;
 bool remote = true;
 int data_bot[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 int data_top[8] = {180, 180, 180, 180, 180, 180, 180, 0};
@@ -69,7 +69,7 @@ int param_pos[3] = {0, 9, 12};
 void setup()
 {
   Trans.begin(115200);
-  //Serial.begin(115200);
+  Serial.begin(115200);
 
   pinMode(GIMBAL_R_X_AXIS_PIN, INPUT);//hor1
   pinMode(GIMBAL_R_Y_AXIS_PIN, INPUT);//ver1  
@@ -128,6 +128,18 @@ void loop()
 
   }
 
+//Serial.println("123");
+
+if(millis() - tmr > 200)
+{
+  tmr = millis();
+
+  if(digitalRead(PIN_BRIDGE_ENABLED) == LOW) Serial.println("Bridge Enabled");
+  if(digitalRead(PIN_SPREADER_ENABLED) == LOW) Serial.println("Spreader Enabled");
+  if(digitalRead(PIN_LIFTING_MECH_ENABLED) == LOW) Serial.println("Lifting Enabled");
+  if(digitalRead(PIN_MINICRANES_ENABLED) == LOW) Serial.println("Mini Cranes Enabled");
+}
+
 //if(millis() - tmr > 50)
 //{
   //tmr = millis();
@@ -141,7 +153,7 @@ void loop()
   int TWISTLOCKS_STATE = digitalRead(PIN_MINICRANES_ENABLED) * 180;
   int MINICRANE_SYNC_STATE = digitalRead(PIN_MINICRANES_SYNCMODE);
   int MINICRANE_ACTIVE_CRANE = digitalRead(PIN_MINICRANES_ACTIVECRANENUM);
-  int LIFT_UP_DOWN_VAL = map(GIMBAL_R_Y, 0, 1023, 0, 180);
+  int LIFT_UP_DOWN_VAL = map(GIMBAL_R_Y, 100, 808, 0, 180);
 
 
   //мост включен
@@ -192,5 +204,11 @@ void loop()
     Trans.write(',');
     Trans.write(pointer);
     Trans.write(TERMINATOR);
+
+    Serial.print("3,");
+    Serial.print(LIFT_UP_DOWN_VAL);
+    Serial.print(',');
+    Serial.print(pointer);
+    Serial.println(TERMINATOR);
   }
 }
