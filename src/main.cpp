@@ -35,9 +35,9 @@ SoftwareSerial Trans(TRANS_Rx_PIN,TRANS_Tx_PIN);
 ///////////  Encoder pins            /////////////
 //////////////////////////////////////////////////
 #define ENCODER_DIR1_PIN 11
-#define ENCODER_DIR1_PIN 12
+#define ENCODER_DIR2_PIN 12
 #define ENCODER_KEY_PIN 13
-EncButton encoderButton(ENCODER_DIR1_PIN, ENCODER_DIR1_PIN, ENCODER_KEY_PIN);
+EncButton encoderButton(ENCODER_DIR1_PIN, ENCODER_DIR2_PIN, ENCODER_KEY_PIN);
 
 //////////////////////////////////////////////////
 ///////////  Timers                  /////////////
@@ -58,8 +58,8 @@ GyverOLED<SSD1306_128x64> oled;
 /////////// Variables                /////////////
 //////////////////////////////////////////////////
 int servoNumManual = 6;
-byte prevPointer = 0;
-byte pointer = 6;
+int prevPointer = 0;
+int pointer = 6;
 bool remote = true;
 int data_bot[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 int data_top[8] = {180, 180, 180, 180, 180, 180, 180, 0};
