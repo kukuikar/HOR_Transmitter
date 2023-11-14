@@ -159,7 +159,7 @@ if(millis() - tmr > 200)
   int TWISTLOCKS_STATE = digitalRead(PIN_MINICRANES_ENABLED) * 180;
   int MINICRANE_SYNC_STATE = digitalRead(PIN_MINICRANES_SYNCMODE);
   int MINICRANE_ACTIVE_CRANE = digitalRead(PIN_MINICRANES_ACTIVECRANENUM);
-  int LIFT_UP_DOWN_VAL = map(GIMBAL_R_Y, 0, 1023, 0, 180);
+  int LIFT_UP_DOWN_VAL = map(GIMBAL_R_Y, 100, 808, 0, 180);
 
 
   //мост включен
