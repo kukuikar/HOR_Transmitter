@@ -35,9 +35,9 @@ SoftwareSerial Trans(TRANS_Rx_PIN,TRANS_Tx_PIN);
 ///////////  Encoder pins            /////////////
 //////////////////////////////////////////////////
 #define ENCODER_DIR1_PIN 11
-#define ENCODER_DIR1_PIN 12
+#define ENCODER_DIR2_PIN 12
 #define ENCODER_KEY_PIN 13
-EncButton encoderButton(ENCODER_DIR1_PIN, ENCODER_DIR1_PIN, ENCODER_KEY_PIN);
+EncButton encoderButton(ENCODER_DIR1_PIN, ENCODER_DIR2_PIN, ENCODER_KEY_PIN);
 
 //////////////////////////////////////////////////
 ///////////  Timers                  /////////////
@@ -52,14 +52,14 @@ uint32_t tmr = millis();
 //////////////////////////////////////////////////
 ///////////  IIC OLED                /////////////
 //////////////////////////////////////////////////
-GyverOLED<SSD1306_128x64> oled;
+GyverOLED<SSH1106_128x64> oled;
 
 //////////////////////////////////////////////////
 /////////// Variables                /////////////
 //////////////////////////////////////////////////
 int servoNumManual = 6;
 byte prevPointer = 0;
-byte pointer = 0;
+byte pointer = 6;
 bool remote = true;
 int data_bot[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 int data_top[8] = {180, 180, 180, 180, 180, 180, 180, 0};
@@ -68,6 +68,9 @@ int param_pos[3] = {0, 9, 12};
 
 void setup()
 {
+  pinMode(TRANS_Rx_PIN, INPUT);
+  pinMode(TRANS_Tx_PIN, OUTPUT);
+
   Trans.begin(115200);
   Serial.begin(115200);
 
@@ -89,32 +92,22 @@ void setup()
 
   oled.init();
   oled.clear();
-
-  oled.print(F("cookies"));
-
-  oled.setCursor(0, pointer);
-  oled.print('>');
-
+  oled.home();
+  oled.print("starting...");
   oled.update();
-  oled.setPower(OLED_DISPLAY_OFF);
+  //oled.setPower(OLED_DISPLAY_OFF);
 }
 
 
 
 void loop()
 {
-  if(millis() - tmr > 200)
-  {
-    tmr = millis();
-
-    //Serial.println();
-  }
   encoderButton.tick();
   if (encoderButton.turn())
   {    
-    oled.setCursor(param_pos[flag]*6, pointer);
-    oled.print('>');
-    oled.update();
+    //oled.setCursor(param_pos[flag]*6, pointer);
+    //oled.print('>');
+    //oled.update();
   }
   
   if (encoderButton.click())
@@ -193,16 +186,23 @@ void loop()
   //либо подъемники включены
   else if(digitalRead(PIN_LIFTING_MECH_ENABLED) == LOW)
   {    
-    Trans.write("3,");
+    Trans.write('3');
+    Trans.write(',');
     Trans.write(LIFT_UP_DOWN_VAL);
     Trans.write(',');
     Trans.write(pointer);
     Trans.write(TERMINATOR);
 
-    Serial.print("3,");
+    Serial.print(3);
+    Serial.print(',');
     Serial.print(LIFT_UP_DOWN_VAL);
     Serial.print(',');
     Serial.print(pointer);
     Serial.println(TERMINATOR);
+
+    oled.clear();
+    oled.home();
+    oled.print('1');
+    oled.update();
   }
 }
