@@ -59,7 +59,7 @@ GyverOLED<SSH1106_128x64> oled;
 //////////////////////////////////////////////////
 int servoNumManual = 6;
 byte prevPointer = 0;
-byte pointer = 6;
+byte pointer = 0;
 bool remote = true;
 int data_bot[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 int data_top[8] = {180, 180, 180, 180, 180, 180, 180, 0};
@@ -127,6 +127,18 @@ void loop()
 
   }
 
+//Serial.println("123");
+
+if(millis() - tmr > 200)
+{
+  tmr = millis();
+
+  if(digitalRead(PIN_BRIDGE_ENABLED) == LOW) Serial.println("Bridge Enabled");
+  if(digitalRead(PIN_SPREADER_ENABLED) == LOW) Serial.println("Spreader Enabled");
+  if(digitalRead(PIN_LIFTING_MECH_ENABLED) == LOW) Serial.println("Lifting Enabled");
+  if(digitalRead(PIN_MINICRANES_ENABLED) == LOW) Serial.println("Mini Cranes Enabled");
+}
+
 //if(millis() - tmr > 50)
 //{
   //tmr = millis();
@@ -140,7 +152,7 @@ void loop()
   int TWISTLOCKS_STATE = digitalRead(PIN_MINICRANES_ENABLED) * 180;
   int MINICRANE_SYNC_STATE = digitalRead(PIN_MINICRANES_SYNCMODE);
   int MINICRANE_ACTIVE_CRANE = digitalRead(PIN_MINICRANES_ACTIVECRANENUM);
-  int LIFT_UP_DOWN_VAL = round(map(GIMBAL_R_Y, 100, 808, 0, 180)/5)*5;
+  int LIFT_UP_DOWN_VAL = map(GIMBAL_R_Y, 100, 808, 0, 180);
 
 
   //мост включен
