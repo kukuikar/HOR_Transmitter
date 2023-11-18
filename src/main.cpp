@@ -9,6 +9,7 @@
 #define TRANS_Rx_PIN 2
 #define TRANS_Tx_PIN 3
 SoftwareSerial Trans(TRANS_Rx_PIN,TRANS_Tx_PIN);
+//kdjfnbkldjfhb
 
 //////////////////////////////////////////////////
 ///////////  Switches pins           /////////////
