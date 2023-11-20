@@ -107,7 +107,7 @@ void loop()
   {
     tmr = millis();
 
-    //Serial.println();
+    Serial.println(analogRead(GIMBAL_R_X_AXIS_PIN));
   }
   encoderButton.tick();
   if (encoderButton.turn())
