@@ -9,6 +9,7 @@
 #define TRANS_Rx_PIN 2
 #define TRANS_Tx_PIN 3
 SoftwareSerial Trans(TRANS_Rx_PIN,TRANS_Tx_PIN);
+//kdjfnbkldjfhb
 
 //////////////////////////////////////////////////
 ///////////  Switches pins           /////////////
@@ -52,14 +53,14 @@ uint32_t tmr = millis();
 //////////////////////////////////////////////////
 ///////////  IIC OLED                /////////////
 //////////////////////////////////////////////////
-GyverOLED<SSD1306_128x64> oled;
+GyverOLED<SSH1106_128x64> oled;
 
 //////////////////////////////////////////////////
 /////////// Variables                /////////////
 //////////////////////////////////////////////////
 int servoNumManual = 6;
-int prevPointer = 0;
-int pointer = 6;
+byte prevPointer = 0;
+byte pointer = 0;
 bool remote = true;
 int data_bot[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 int data_top[8] = {180, 180, 180, 180, 180, 180, 180, 0};
@@ -68,6 +69,9 @@ int param_pos[3] = {0, 9, 12};
 
 void setup()
 {
+  pinMode(TRANS_Rx_PIN, INPUT);
+  pinMode(TRANS_Tx_PIN, OUTPUT);
+
   Trans.begin(115200);
   Serial.begin(115200);
 
@@ -89,32 +93,31 @@ void setup()
 
   oled.init();
   oled.clear();
-
-  oled.print(F("cookies"));
-
-  oled.setCursor(0, pointer);
-  oled.print('>');
-
+  oled.home();
+  oled.print("starting...");
   oled.update();
-  oled.setPower(OLED_DISPLAY_OFF);
+  //oled.setPower(OLED_DISPLAY_OFF);
 }
 
 
 
 void loop()
 {
+
   if(millis() - tmr > 200)
   {
     tmr = millis();
 
     Serial.println(analogRead(GIMBAL_R_X_AXIS_PIN));
   }
+
+
   encoderButton.tick();
   if (encoderButton.turn())
   {    
-    oled.setCursor(param_pos[flag]*6, pointer);
-    oled.print('>');
-    oled.update();
+    //oled.setCursor(param_pos[flag]*6, pointer);
+    //oled.print('>');
+    //oled.update();
   }
   
   if (encoderButton.click())
@@ -205,16 +208,24 @@ if(millis() - tmr > 200)
   //либо подъемники включены
   else if(digitalRead(PIN_LIFTING_MECH_ENABLED) == LOW)
   {    
-    Trans.write("3,");
+    Trans.write('3');
+    Trans.write(',');
     Trans.write(LIFT_UP_DOWN_VAL);
     Trans.write(',');
     Trans.write(pointer);
     Trans.write(TERMINATOR);
 
-    Serial.print("3,");
+    Serial.print(3);
+    Serial.print(',');
     Serial.print(LIFT_UP_DOWN_VAL);
     Serial.print(',');
     Serial.print(pointer);
     Serial.println(TERMINATOR);
+
+    oled.clear();
+    oled.home();
+    oled.print('1');
+    oled.update();
   }
+  delay(20);
 }
