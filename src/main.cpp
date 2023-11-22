@@ -44,6 +44,7 @@ EncButton encoderButton(ENCODER_DIR1_PIN, ENCODER_DIR2_PIN, ENCODER_KEY_PIN);
 ///////////  Timers                  /////////////
 //////////////////////////////////////////////////
 uint32_t tmr = millis();
+uint32_t tmr2 = millis();
 
 //////////////////////////////////////////////////
 ///////////  Terminator              /////////////
@@ -72,7 +73,7 @@ void setup()
   pinMode(TRANS_Rx_PIN, INPUT);
   pinMode(TRANS_Tx_PIN, OUTPUT);
 
-  Trans.begin(115200);
+  Trans.begin(9600);
   Serial.begin(115200);
 
   pinMode(GIMBAL_R_X_AXIS_PIN, INPUT);//hor1
@@ -103,15 +104,6 @@ void setup()
 
 void loop()
 {
-
-  if(millis() - tmr > 200)
-  {
-    tmr = millis();
-
-    Serial.println(analogRead(GIMBAL_R_X_AXIS_PIN));
-  }
-
-
   encoderButton.tick();
   if (encoderButton.turn())
   {    
@@ -138,7 +130,7 @@ void loop()
   }
 
 //Serial.println("123");
-
+/*
 if(millis() - tmr > 200)
 {
   tmr = millis();
@@ -148,7 +140,7 @@ if(millis() - tmr > 200)
   if(digitalRead(PIN_LIFTING_MECH_ENABLED) == LOW) Serial.println("Lifting Enabled");
   if(digitalRead(PIN_MINICRANES_ENABLED) == LOW) Serial.println("Mini Cranes Enabled");
 }
-
+*/
 //if(millis() - tmr > 50)
 //{
   //tmr = millis();
@@ -202,12 +194,15 @@ if(millis() - tmr > 200)
     Trans.write(map(GIMBAL_L_Y, 0, 1023, -255, 255));//PWM //drive winch
     Trans.write(',');
     Trans.write(map(GIMBAL_R_Y, 0, 1023, -255, 255));//PWM //arm up down
-    Trans.write(TERMINATOR);
+    Trans.write(TERMINATOR); 
   }
 
   //либо подъемники включены
   else if(digitalRead(PIN_LIFTING_MECH_ENABLED) == LOW)
   {    
+    if(millis() - tmr2 > 200)
+    {
+      tmr2 = millis();
     Trans.write('3');
     Trans.write(',');
     Trans.write(LIFT_UP_DOWN_VAL);
@@ -215,6 +210,7 @@ if(millis() - tmr > 200)
     Trans.write(pointer);
     Trans.write(TERMINATOR);
 
+    Serial.print("Lifting...   ");
     Serial.print(3);
     Serial.print(',');
     Serial.print(LIFT_UP_DOWN_VAL);
@@ -222,10 +218,11 @@ if(millis() - tmr > 200)
     Serial.print(pointer);
     Serial.println(TERMINATOR);
 
-    oled.clear();
-    oled.home();
-    oled.print('1');
-    oled.update();
+    //oled.clear();
+    //oled.home();
+    //oled.print('1');
+    //oled.update();
+    }
   }
   delay(20);
 }
