@@ -8,8 +8,9 @@
 //////////////////////////////////////////////////
 #define TRANS_Rx_PIN 2
 #define TRANS_Tx_PIN 3
-SoftwareSerial Trans(TRANS_Rx_PIN,TRANS_Tx_PIN);
-//kdjfnbkldjfhb
+#define SOFT_SERIAL_SPEED 57600
+
+SoftwareSerial TransmitterSerial(TRANS_Rx_PIN,TRANS_Tx_PIN);
 
 //////////////////////////////////////////////////
 ///////////  Switches pins           /////////////
@@ -67,13 +68,16 @@ int data_bot[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 int data_top[8] = {180, 180, 180, 180, 180, 180, 180, 0};
 int flag = 0;
 int param_pos[3] = {0, 9, 12};
+int GIMBAL_R_BOTTOM_VALUE = 100;
+int GIMBAL_R_TOP_VALUE = 808;
+int GIMBAL_R_ZERO_VALUE = 450;
 
 void setup()
 {
   pinMode(TRANS_Rx_PIN, INPUT);
   pinMode(TRANS_Tx_PIN, OUTPUT);
 
-  Trans.begin(9600);
+  Trans.begin(115200);
   Serial.begin(115200);
 
   pinMode(GIMBAL_R_X_AXIS_PIN, INPUT);//hor1
@@ -160,25 +164,25 @@ if(millis() - tmr > 200)
   //мост включен
   if(digitalRead(PIN_BRIDGE_ENABLED) == LOW)
   {      
-    Trans.write("0,");
-    Trans.write(map(GIMBAL_R_X, 0, 1023, -255, 255));//PWM //drive bridge
-    Trans.write(',');
-    Trans.write(map(GIMBAL_R_Y, 0, 1023, -255, 255));//PWM //drive trolley
-    Trans.write(',');
-    Trans.write(map(GIMBAL_L_Y, 0, 1023, -255, 255));//PWM //drive winch
-    Trans.write(TERMINATOR);
+    TransmitterSerial.write("0,");
+    TransmitterSerial.write(map(GIMBAL_R_X, 0, 1023, -255, 255));//PWM //drive bridge
+    TransmitterSerial.write(',');
+    TransmitterSerial.write(map(GIMBAL_R_Y, 0, 1023, -255, 255));//PWM //drive trolley
+    TransmitterSerial.write(',');
+    TransmitterSerial.write(map(GIMBAL_L_Y, 0, 1023, -255, 255));//PWM //drive winch
+    TransmitterSerial.write(TERMINATOR);
   }
 
   //либо спредер включен
   else if(digitalRead(PIN_SPREADER_ENABLED) == LOW)
   {
-    Trans.write("1,");
-    Trans.write(map(GIMBAL_R_X, 0, 1023, -255, 255));//PWM //rotate
-    Trans.write(',');
-    Trans.write(map(GIMBAL_L_Y, 0, 1023, -255, 255));//PWM //drive telescopes
-    Trans.write(',');
-    Trans.write(TWISTLOCKS_STATE);//ANGLE //lock unlock twistlocks
-    Trans.write(TERMINATOR);
+    TransmitterSerial.write("1,");
+    TransmitterSerial.write(map(GIMBAL_R_X, 0, 1023, -255, 255));//PWM //rotate
+    TransmitterSerial.write(',');
+    TransmitterSerial.write(map(GIMBAL_L_Y, 0, 1023, -255, 255));//PWM //drive telescopes
+    TransmitterSerial.write(',');
+    TransmitterSerial.write(TWISTLOCKS_STATE);//ANGLE //lock unlock twistlocks
+    TransmitterSerial.write(TERMINATOR);
   }
 
   //либо миникраны включены
@@ -194,15 +198,12 @@ if(millis() - tmr > 200)
     Trans.write(map(GIMBAL_L_Y, 0, 1023, -255, 255));//PWM //drive winch
     Trans.write(',');
     Trans.write(map(GIMBAL_R_Y, 0, 1023, -255, 255));//PWM //arm up down
-    Trans.write(TERMINATOR); 
+    Trans.write(TERMINATOR);
   }
 
   //либо подъемники включены
   else if(digitalRead(PIN_LIFTING_MECH_ENABLED) == LOW)
   {    
-    if(millis() - tmr2 > 200)
-    {
-      tmr2 = millis();
     Trans.write('3');
     Trans.write(',');
     Trans.write(LIFT_UP_DOWN_VAL);
@@ -224,5 +225,4 @@ if(millis() - tmr > 200)
     //oled.update();
     }
   }
-  delay(20);
 }
