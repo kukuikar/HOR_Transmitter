@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////
 #define TRANS_Rx_PIN 2
 #define TRANS_Tx_PIN 3
-#define SOFT_SERIAL_SPEED 57600
+#define SOFT_SERIAL_SPEED 38400
 
 SoftwareSerial TransmitterSerial(TRANS_Rx_PIN,TRANS_Tx_PIN);
 
@@ -78,7 +78,7 @@ void setup()
   pinMode(TRANS_Tx_PIN, OUTPUT);
 
   TransmitterSerial.begin(SOFT_SERIAL_SPEED);
-  Serial.begin(115200);
+  Serial.begin(9600);
 
   pinMode(GIMBAL_R_X_AXIS_PIN, INPUT);//hor1
   pinMode(GIMBAL_R_Y_AXIS_PIN, INPUT);//ver1  
@@ -208,7 +208,7 @@ if(millis() - tmr > 200)
     TransmitterSerial.write(',');
     TransmitterSerial.write(LIFT_UP_DOWN_VAL);
     TransmitterSerial.write(',');
-    TransmitterSerial.write(pointer);
+    TransmitterSerial.write(6);
     TransmitterSerial.write(TERMINATOR);
 
     Serial.print("Lifting...   ");
@@ -216,7 +216,7 @@ if(millis() - tmr > 200)
     Serial.print(',');
     Serial.print(LIFT_UP_DOWN_VAL);
     Serial.print(',');
-    Serial.print(pointer);
+    Serial.print(6);
     Serial.println(TERMINATOR);
 
     //oled.clear();
