@@ -77,7 +77,7 @@ void setup()
   pinMode(TRANS_Rx_PIN, INPUT);
   pinMode(TRANS_Tx_PIN, OUTPUT);
 
-  Trans.begin(115200);
+  TransmitterSerial.begin(SOFT_SERIAL_SPEED);
   Serial.begin(115200);
 
   pinMode(GIMBAL_R_X_AXIS_PIN, INPUT);//hor1
@@ -188,28 +188,28 @@ if(millis() - tmr > 200)
   //либо миникраны включены
   else if(digitalRead(PIN_MINICRANES_ENABLED) == LOW)
   {
-    Trans.write("2,");
-    Trans.write(MINICRANE_SYNC_STATE);//INT //work syncrously    
-    Trans.write(',');
-    Trans.write(MINICRANE_ACTIVE_CRANE);//INT //working active crane  
-    Trans.write(',');
-    Trans.write(map(GIMBAL_R_X, 0, 1023, -255, 255));//PWM //Rotate
-    Trans.write(',');
-    Trans.write(map(GIMBAL_L_Y, 0, 1023, -255, 255));//PWM //drive winch
-    Trans.write(',');
-    Trans.write(map(GIMBAL_R_Y, 0, 1023, -255, 255));//PWM //arm up down
-    Trans.write(TERMINATOR);
+    TransmitterSerial.write("2,");
+    TransmitterSerial.write(MINICRANE_SYNC_STATE);//INT //work syncrously    
+    TransmitterSerial.write(',');
+    TransmitterSerial.write(MINICRANE_ACTIVE_CRANE);//INT //working active crane  
+    TransmitterSerial.write(',');
+    TransmitterSerial.write(map(GIMBAL_R_X, 0, 1023, -255, 255));//PWM //Rotate
+    TransmitterSerial.write(',');
+    TransmitterSerial.write(map(GIMBAL_L_Y, 0, 1023, -255, 255));//PWM //drive winch
+    TransmitterSerial.write(',');
+    TransmitterSerial.write(map(GIMBAL_R_Y, 0, 1023, -255, 255));//PWM //arm up down
+    TransmitterSerial.write(TERMINATOR);
   }
 
   //либо подъемники включены
   else if(digitalRead(PIN_LIFTING_MECH_ENABLED) == LOW)
   {    
-    Trans.write('3');
-    Trans.write(',');
-    Trans.write(LIFT_UP_DOWN_VAL);
-    Trans.write(',');
-    Trans.write(pointer);
-    Trans.write(TERMINATOR);
+    TransmitterSerial.write('3');
+    TransmitterSerial.write(',');
+    TransmitterSerial.write(LIFT_UP_DOWN_VAL);
+    TransmitterSerial.write(',');
+    TransmitterSerial.write(pointer);
+    TransmitterSerial.write(TERMINATOR);
 
     Serial.print("Lifting...   ");
     Serial.print(3);
@@ -225,4 +225,3 @@ if(millis() - tmr > 200)
     //oled.update();
     }
   }
-}
