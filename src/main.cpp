@@ -1,7 +1,7 @@
 #include <Arduino.h>
-#include <SoftwareSerial.h>
-#include <EncButton.h>
-#include <GyverOLED.h>
+//#include <SoftwareSerial.h>
+//#include <EncButton.h>
+//#include <GyverOLED.h>
 #include <RF24.h>
 
 //////////////////////////////////////////////////
@@ -79,7 +79,7 @@ uint32_t tmr2 = millis();
 //////////////////////////////////////////////////
 ///////////  IIC OLED                /////////////
 //////////////////////////////////////////////////
-GyverOLED<SSH1106_128x64> oled;
+//GyverOLED<SSH1106_128x64> oled;
 
 //////////////////////////////////////////////////
 /////////// Variables                /////////////
