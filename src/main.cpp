@@ -44,13 +44,13 @@ const byte address[6] = "00001"; // Address
 //////////////////////////////////////////////////
 ///////////  Switches pins           /////////////
 //////////////////////////////////////////////////
-#define PIN_BRIDGE_ENABLED 4 //enable bridge control
-#define PIN_SPREADER_ENABLED 5 //enable spreader control
-#define PIN_MINICRANES_ENABLED 6 //eneble minicranes control
-#define PIN_MINICRANES_MODE 7 //minicrane twin mode
+#define PIN_BRIDGE_ENABLED            4 //enable bridge control
+#define PIN_SPREADER_ENABLED          5 //enable spreader control
+#define PIN_MINICRANES_ENABLED        6 //eneble minicranes control
+#define PIN_MINICRANES_MODE           7 //minicrane twin mode
 #define PIN_MINICRANES_ACTIVECRANENUM 8 //minicrane active crane
-#define PIN_LIFT_ENABLED 9 //minicrane twin mode
-#define PIN_TWISTLOCK_STATE 10 //lock unlock twistlocks
+#define PIN_LIFT_ENABLED              9 //lift enabled
+#define PIN_TWISTLOCK_STATE           10 //lock unlock twistlocks
 
 
 //////////////////////////////////////////////////
@@ -63,11 +63,11 @@ const byte address[6] = "00001"; // Address
 #define GIMBAL_L_Y_AXIS_PIN A7 //A7
 
 //////////////////////////////////////////////////
-///////////  Encoder pins            /////////////
+///////////  Encoder                 /////////////
 //////////////////////////////////////////////////
-#define ENCODER_DIR1_PIN 11
-#define ENCODER_DIR2_PIN 12
-#define ENCODER_KEY_PIN 13
+#define ENCODER_DIR1_PIN  11
+#define ENCODER_DIR2_PIN  12
+#define ENCODER_KEY_PIN   13
 EncButton encoderButton(ENCODER_DIR1_PIN, ENCODER_DIR2_PIN, ENCODER_KEY_PIN);
 
 //////////////////////////////////////////////////
@@ -77,11 +77,6 @@ uint32_t tmr = millis();
 uint32_t tmr2 = millis();
 
 //////////////////////////////////////////////////
-///////////  Terminator              /////////////
-//////////////////////////////////////////////////
-#define TERMINATOR ';'
-
-//////////////////////////////////////////////////
 ///////////  IIC OLED                /////////////
 //////////////////////////////////////////////////
 GyverOLED<SSH1106_128x64> oled;
@@ -89,17 +84,7 @@ GyverOLED<SSH1106_128x64> oled;
 //////////////////////////////////////////////////
 /////////// Variables                /////////////
 //////////////////////////////////////////////////
-int servoNumManual = 6;
-byte prevPointer = 0;
-byte pointer = 0;
-bool remote = true;
-int data_bot[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-int data_top[8] = {180, 180, 180, 180, 180, 180, 180, 0};
-int flag = 0;
-int param_pos[3] = {0, 9, 12};
-int GIMBAL_R_BOTTOM_VALUE = 100;
-int GIMBAL_R_TOP_VALUE = 808;
-int GIMBAL_R_ZERO_VALUE = 450;
+
 
 void setup()
 {
