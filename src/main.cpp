@@ -36,21 +36,21 @@ Data_Package data;
 //////////////////////////////////////////////////
 ///////////  Communication           /////////////
 //////////////////////////////////////////////////
-#define TRANS_CE_PIN 2
-#define TRANS_CSN_PIN 3
+#define TRANS_CE_PIN 9
+#define TRANS_CSN_PIN 10
 RF24 radio(TRANS_CE_PIN, TRANS_CSN_PIN);// nRF24L01 (CE, CSN)
 const byte address[6] = "00001"; // Address
 
 //////////////////////////////////////////////////
 ///////////  Switches pins           /////////////
 //////////////////////////////////////////////////
-#define PIN_BRIDGE_ENABLED            4 //enable bridge control
-#define PIN_SPREADER_ENABLED          5 //enable spreader control
-#define PIN_MINICRANES_ENABLED        6 //eneble minicranes control
-#define PIN_MINICRANES_MODE           7 //minicrane twin mode
-#define PIN_MINICRANES_ACTIVECRANENUM 8 //minicrane active crane
-#define PIN_LIFT_ENABLED              9 //lift enabled
-#define PIN_TWISTLOCK_STATE           10 //lock unlock twistlocks
+#define PIN_BRIDGE_ENABLED            2 //enable bridge control
+#define PIN_SPREADER_ENABLED          3 //enable spreader control
+#define PIN_MINICRANES_ENABLED        4 //eneble minicranes control
+#define PIN_MINICRANES_MODE           5 //minicrane twin mode
+#define PIN_MINICRANES_ACTIVECRANENUM 6 //minicrane active crane
+#define PIN_LIFT_ENABLED              7 //lift enabled
+#define PIN_TWISTLOCK_STATE           8 //lock unlock twistlocks
 
 
 //////////////////////////////////////////////////
@@ -65,10 +65,10 @@ const byte address[6] = "00001"; // Address
 //////////////////////////////////////////////////
 ///////////  Encoder                 /////////////
 //////////////////////////////////////////////////
-#define ENCODER_DIR1_PIN  11
-#define ENCODER_DIR2_PIN  12
-#define ENCODER_KEY_PIN   13
-EncButton encoderButton(ENCODER_DIR1_PIN, ENCODER_DIR2_PIN, ENCODER_KEY_PIN);
+//#define ENCODER_DIR1_PIN  11
+//#define ENCODER_DIR2_PIN  12
+//#define ENCODER_KEY_PIN   13
+//EncButton encoderButton(ENCODER_DIR1_PIN, ENCODER_DIR2_PIN, ENCODER_KEY_PIN);
 
 //////////////////////////////////////////////////
 ///////////  Timers                  /////////////
