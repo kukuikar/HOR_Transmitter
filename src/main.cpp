@@ -36,11 +36,9 @@ Data_Package data;
 //////////////////////////////////////////////////
 ///////////  Communication           /////////////
 //////////////////////////////////////////////////
-//#define TRANS_Rx_PIN 2
-//#define TRANS_Tx_PIN 3
-//#define SOFT_SERIAL_SPEED 38400
-//SoftwareSerial TransmitterSerial(TRANS_Rx_PIN,TRANS_Tx_PIN);
-RF24 radio(2, 3);// nRF24L01 (CE, CSN)
+#define TRANS_CE_PIN 2
+#define TRANS_CSN_PIN 3
+RF24 radio(TRANS_CE_PIN, TRANS_CSN_PIN);// nRF24L01 (CE, CSN)
 const byte address[6] = "00001"; // Address
 
 //////////////////////////////////////////////////
@@ -121,6 +119,7 @@ void setup()
 
   pinMode(PIN_MINICRANES_ENABLED, INPUT_PULLUP);
   pinMode(PIN_MINICRANES_MODE, INPUT_PULLUP);
+  pinMode(PIN_MINICRANES_ACTIVECRANENUM, INPUT_PULLUP);
 
   pinMode(PIN_LIFT_ENABLED, INPUT_PULLUP);
 }
@@ -142,10 +141,10 @@ void loop()
   byte MINI_EN      = digitalRead(PIN_MINICRANES_ENABLED);
   byte LIFT_EN      = digitalRead(PIN_LIFT_ENABLED);
 
-  byte TWISTLOCKS_STATE = digitalRead(PIN_TWISTLOCK_STATE) * 180;
-  byte MINICRANE_SYNC_STATE = digitalRead(PIN_MINICRANES_MODE);
+  byte TWISTLOCKS_STATE       = digitalRead(PIN_TWISTLOCK_STATE) * 180;
+  byte MINICRANE_SYNC_STATE   = digitalRead(PIN_MINICRANES_MODE);
   byte MINICRANE_ACTIVE_CRANE = digitalRead(PIN_MINICRANES_ACTIVECRANENUM);
-  byte LIFT_UP_DOWN_VAL = map(GIMBAL_R_Y, 100, 808, 0, 180);
+  byte LIFT_UP_DOWN_VAL       = map(GIMBAL_R_Y, 100, 808, 0, 180);
   */
 
   data.Bridge_Enabled = digitalRead(PIN_BRIDGE_ENABLED);
