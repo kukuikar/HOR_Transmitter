@@ -88,7 +88,7 @@ uint32_t tmr2 = millis();
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(38400);
 
   //Define the radio communication
   radio.begin();
@@ -132,16 +132,19 @@ void loop()
   byte LIFT_UP_DOWN_VAL       = map(GIMBAL_R_Y, 100, 808, 0, 180);
   */
 
+  // BRIDGE
   data.Bridge_Enabled = digitalRead(PIN_BRIDGE_ENABLED);
   data.Bridge_Drive   = GIMBAL_R_X;
   data.Bridge_Trolley = GIMBAL_R_Y;
   data.Bridge_Trolley = GIMBAL_L_Y;
 
+  // SPREADER
   data.Spreader_Enabled     = digitalRead(PIN_SPREADER_ENABLED);
   data.Spreader_Rotate      = GIMBAL_R_X;
   data.Spreader_Telescopes  = GIMBAL_L_Y;
   data.Spreader_Twistlocks  = digitalRead(PIN_TWISTLOCK_STATE) * 180;
 
+  // MINI CRANES
   data.Mini_Enabled     = digitalRead(PIN_MINICRANES_ENABLED);
   data.Mini_Mode        = digitalRead(PIN_MINICRANES_MODE);
   data.Mini_ActiveCrane = digitalRead(PIN_MINICRANES_ACTIVECRANENUM);
@@ -149,6 +152,7 @@ void loop()
   data.Mini_Winch       = GIMBAL_L_Y;
   data.Mini_Arm         = GIMBAL_R_Y;
 
+  // LIFT
   data.Lift_Enabled = digitalRead(PIN_LIFT_ENABLED);
   data.Lift_Drive   = map(GIMBAL_R_Y, 100, 808, 0, 180);
   data.Lift_Servo   = 6;
