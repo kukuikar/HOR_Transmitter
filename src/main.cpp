@@ -113,14 +113,29 @@ void setup()
 
 void loop()
 {
-  Serial.println(analogRead(GIMBAL_R_Y_AXIS_PIN));
+  
+  
 
   byte GIMBAL_R_X = map(analogRead(GIMBAL_R_X_AXIS_PIN), 0, 1023, 0, 255);
+
   byte GIMBAL_R_Y = map(analogRead(GIMBAL_R_Y_AXIS_PIN), 0, 1023, 0, 255);
+  
   byte GIMBAL_L_X = map(analogRead(GIMBAL_L_X_AXIS_PIN), 0, 1023, 0, 255);
   byte GIMBAL_L_Y = map(analogRead(GIMBAL_L_Y_AXIS_PIN), 0, 1023, 0, 255);
 
+  //Добавил, чтобы калибровать "большой" джойстик (всегда новые граници были при подключении)
+  Serial.print("GIMBAL_R_Y_AXIS_PIN = ");
+  Serial.println(analogRead(GIMBAL_R_Y_AXIS_PIN));
+  Serial.print("GIMBAL_R_Y = ");
+  Serial.println(GIMBAL_R_Y);
+  Serial.print("Send:  ");
+  Serial.println(data.Lift_Drive);
+  delay(20);
+
+  
   /*
+
+  
   byte BRIDGE_EN    = digitalRead(PIN_BRIDGE_ENABLED);
   byte SPREADER_EN  = digitalRead(PIN_SPREADER_ENABLED);
   byte MINI_EN      = digitalRead(PIN_MINICRANES_ENABLED);
@@ -154,8 +169,9 @@ void loop()
 
   // LIFT
   data.Lift_Enabled = digitalRead(PIN_LIFT_ENABLED);
-  data.Lift_Drive   = map(GIMBAL_R_Y, 100, 808, 0, 180);
+  data.Lift_Drive   = map(GIMBAL_R_Y, 0, 255, 0, 180);
   data.Lift_Servo   = 6;
 
   radio.write(&data, sizeof(Data_Package));
+  
   }
