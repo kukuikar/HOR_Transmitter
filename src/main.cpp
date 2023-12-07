@@ -96,6 +96,7 @@ void setup()
   radio.setAutoAck(false);
   radio.setDataRate(RF24_250KBPS);
   radio.setPALevel(RF24_PA_LOW);
+  radio.setChannel(0x60);
 
   pinMode(PIN_BRIDGE_ENABLED, INPUT_PULLUP);
 
@@ -108,8 +109,19 @@ void setup()
 
   pinMode(PIN_LIFT_ENABLED, INPUT_PULLUP);
 }
-
-
+/*
+    fastDW(SH_LD_165, LOW);
+    fastDW(SH_LD_165, HIGH);
+    for (int i = 0; i < 8; i++)
+    {
+        if (digitalRead(QH_165))
+            buf_165[i] = 1;
+        else
+            buf_165[i] = 0;
+        fastDW(CLK_165, HIGH);
+        fastDW(CLK_165, LOW);
+    }
+    */
 
 void loop()
 {
@@ -132,7 +144,11 @@ void loop()
   Serial.println(data.Lift_Drive);
   delay(20);
 
-  
+  String S;
+  S.reserve(100);
+  char str[50];
+  S.toCharArray(str,S.length()+1);
+  //S.remove;
   /*
 
   
